@@ -41,8 +41,8 @@
         public static ulong GetStaticFieldDataOfClass(string assembly_name, string class_name)
         {
             var staticFieldData = Monolib.find_class(assembly_name, class_name).get_vtable(Monolib.get_root_domain()).get_static_field_data();
-                if (staticFieldData == 0x0)
-                    throw new NullPtrException(nameof(staticFieldData));
+            if (staticFieldData == 0x0)
+            	throw new NullPtrException(nameof(staticFieldData));
 	    var deref =  Memory.ReadValue<ulong>(staticFieldData + 0x0); // Deref at 0x0
             if (deref == 0x0)
             	throw new NullPtrException(nameof(deref));
