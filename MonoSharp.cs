@@ -20,10 +20,10 @@
             if (monoClass == 0x0)
                 throw new NullPtrException(nameof(monoClass));
 			
-			var result = Memory.ReadValue<ulong>(monoClass);
-			if (result == 0x0)
-				throw new NullPtrException(nameof(result));
-            return result;
+	    var deref = Memory.ReadValue<ulong>(monoClass + 0x0); // Deref at 0x0
+	    if (deref == 0x0)
+            	throw new NullPtrException(nameof(deref));
+            return deref;
         }
 
         public static ulong FindMethodOfClass(string assembly_name, string class_name, string method_name)
@@ -43,10 +43,10 @@
             var staticFieldData = Monolib.find_class(assembly_name, class_name).get_vtable(Monolib.get_root_domain()).get_static_field_data();
                 if (staticFieldData == 0x0)
                     throw new NullPtrException(nameof(staticFieldData));
-			var result =  Memory.ReadValue<ulong>(staticFieldData);
-			if (result == 0x0)
-				throw new NullPtrException(nameof(result));
-            return result;
+	    var deref =  Memory.ReadValue<ulong>(staticFieldData + 0x0); // Deref at 0x0
+            if (deref == 0x0)
+            	throw new NullPtrException(nameof(deref));
+            return deref;
         }
 
 
