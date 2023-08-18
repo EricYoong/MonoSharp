@@ -1,5 +1,47 @@
-﻿namespace MonoSharp
+﻿/***********************************************************************
+** Written by Frost 8/15/2023 https://github.com/imerzan/MonoSharp
+** Major Thanks to Reahly: https://github.com/reahly/mono-external-lib
+************************************************************************/
+
+namespace MonoSharp
 {
+    /// <summary>
+    /// Example Memory Interface. Replace with your own.
+    /// </summary>
+    internal static class Memory
+    {
+        /// <summary>
+        /// Reads a value of type <typeparamref name="T"/>.
+        /// Replace with your own implementation.
+        /// </summary>
+        /// <typeparam name="T">Value type to read.</typeparam>
+        /// <param name="va">Virtual Address to read from.</param>
+        /// <returns>Value of type <typeparamref name="T"/></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static T ReadValue<T>(ulong va) => 
+            throw new NotImplementedException();
+
+        /// <summary>
+        /// Read an array of bytes.
+        /// Replace with your own implementation.
+        /// </summary>
+        /// <param name="va">Virtual Address to read from.</param>
+        /// <param name="cb">Number of bytes to read.</param>
+        /// <returns>Byte Array containing read result.</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static byte[] ReadBuffer(ulong va, int cb) =>
+            throw new NotImplementedException();
+
+        /// <summary>
+        /// Returns the Module Base Address of mono-2.0-bdwgc.dll
+        /// Replace with your own implementation.
+        /// </summary>
+        /// <returns>Module Base Address of mono-2.0-bdwgc.dll</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static ulong GetMonoModule() =>
+            throw new NotImplementedException();
+    }
+
     internal static class Mono
     {
         public static bool InitializeFunctions()
@@ -18,11 +60,11 @@
 
             var monoClass = Monolib.find_class(assembly_name, class_name);
             if (monoClass == 0x0)
-                throw new NullPtrException(nameof(monoClass));
+                throw new Exception("NULL " + nameof(monoClass));
 			
 	    var deref = Memory.ReadValue<ulong>(monoClass + 0x0); // Deref at 0x0
 	    if (deref == 0x0)
-            	throw new NullPtrException(nameof(deref));
+            	throw new Exception("NULL " + nameof(deref));
             return deref;
         }
 
@@ -30,10 +72,10 @@
         {
             var monoClass = Monolib.find_class(assembly_name, class_name);
             if (monoClass == 0x0)
-                throw new NullPtrException(nameof(monoClass));
+                throw new Exception("NULL " + nameof(monoClass));
             var monoMethod = monoClass.find_method(method_name);
             if (monoMethod == 0x0)
-                throw new NullPtrException(nameof(monoMethod));
+                throw new Exception("NULL " + nameof(monoMethod));
 
             return monoMethod;
         }
@@ -42,13 +84,12 @@
         {
             var staticFieldData = Monolib.find_class(assembly_name, class_name).get_vtable(Monolib.get_root_domain()).get_static_field_data();
             if (staticFieldData == 0x0)
-            	throw new NullPtrException(nameof(staticFieldData));
+            	throw new Exception("NULL " + nameof(staticFieldData));
 	    var deref =  Memory.ReadValue<ulong>(staticFieldData + 0x0); // Deref at 0x0
             if (deref == 0x0)
-            	throw new NullPtrException(nameof(deref));
+            	throw new Exception("NULL " + nameof(deref));
             return deref;
         }
-
 
         private static class Monolib
         {
