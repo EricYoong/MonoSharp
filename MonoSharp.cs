@@ -18,7 +18,8 @@ namespace MonoSharp
         /// <param name="va">Virtual Address to read from.</param>
         /// <returns>Value of type <typeparamref name="T"/></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public static T ReadValue<T>(ulong va) => 
+        public static T ReadValue<T>(ulong va)
+            where T : struct => 
             throw new NotImplementedException();
 
         /// <summary>
