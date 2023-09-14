@@ -92,6 +92,11 @@ namespace MonoSharp
             return deref;
         }
 
+        public static uint FindFieldOffsetInClass(string assembly_name, string class_name, string field_name)
+        {
+            return (uint)Monolib.find_class(assembly_name, class_name).find_field(field_name).offset();
+        }
+
         private static class Monolib
         {
             public static Dictionary<ulong, ulong> functions = new();
@@ -312,6 +317,10 @@ namespace MonoSharp
 
                 return name;
             }
+            public readonly int offset()
+            {
+                return Memory.ReadValue<int>(this + 0x18);
+            }
         }
 
         public readonly struct mono_class_runtime_info_t
@@ -413,8 +422,12 @@ namespace MonoSharp
             public readonly mono_method_t get_method(int i) =>
                 new mono_method_t(Memory.ReadValue<ulong>(Memory.ReadValue<ulong>(this + 0xA0) + 0x8 * (uint)i));
 
-            public readonly mono_class_field_t get_field(int i) =>
-                new mono_class_field_t(Memory.ReadValue<ulong>(Memory.ReadValue<ulong>(this + 0x98) + 0x20 * (uint)i));
+
+            public readonly mono_class_field_t get_field(int i)
+            {
+                var fieldsPtr = Memory.ReadValue<ulong>(this + 0x98);
+                return new mono_class_field_t(fieldsPtr + (ulong)(0x20 * i));
+            }
 
 
             public readonly mono_vtable_t get_vtable(mono_root_domain_t domain)
