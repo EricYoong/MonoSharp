@@ -3,6 +3,9 @@
 ** Major Thanks to Reahly: https://github.com/reahly/mono-external-lib
 ************************************************************************/
 
+using System.Diagnostics;
+using System.Text;
+
 namespace MonoSharp
 {
     /// <summary>
